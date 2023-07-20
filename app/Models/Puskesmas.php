@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Puskesmas extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'nama',
+    ];
+    public function puskesmas() {
+        return $this->belongsTo(User::class);
+    }
 }
