@@ -14,7 +14,8 @@ class FolderController extends Controller
      */
     public function index()
     {
-        //
+        $folders = Folder::all();
+        return $folders;
     }
 
     /**
@@ -44,9 +45,10 @@ class FolderController extends Controller
      * @param  \App\Models\Folder  $folder
      * @return \Illuminate\Http\Response
      */
-    public function show(Folder $folder)
+    public function show($id)
     {
-        //
+        $folder = Folder::with('posyandu')->find($id);
+        return $folder;
     }
 
     /**

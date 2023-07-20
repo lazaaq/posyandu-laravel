@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FolderController;
 use App\Http\Controllers\PosyanduController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,4 +28,9 @@ Route::group(['middleware' => 'api', 'prefix' => 'posyandu'], function ($router)
     Route::get('{id}', [PosyanduController::class, 'show']);
     Route::post('store', [PosyanduController::class, 'store']);
     Route::delete('{id}', [PosyanduController::class, 'destroy']);
+});
+
+Route::group(['middleware' => 'api', 'prefix' => 'folder'], function ($router) {
+    Route::get('', [FolderController::class, 'index']);    
+    Route::get('{id}', [FolderController::class, 'show']);    
 });
