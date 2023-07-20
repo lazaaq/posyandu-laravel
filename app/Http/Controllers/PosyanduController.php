@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Posyandu;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class PosyanduController extends Controller
+class  PosyanduController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +15,8 @@ class PosyanduController extends Controller
      */
     public function index()
     {
-        //
+        $posyandus = Posyandu::all();
+        return $posyandus;
     }
 
     /**
@@ -35,7 +37,17 @@ class PosyanduController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $newUser = User::create([
+            'username' => $request->username,
+            'password' => $request->password,
+            'role' => 'posyandu'
+        ]);
+        $newPosyandu = Posyandu::create([
+            'user_id' => $newUser->id,
+            'nama' => $request->nama,
+            'alamat_padukuhan' => $request->alamat_padukuhan
+        ]);
+        return $newPosyandu->load('user');
     }
 
     /**
@@ -44,9 +56,10 @@ class PosyanduController extends Controller
      * @param  \App\Models\Posyandu  $posyandu
      * @return \Illuminate\Http\Response
      */
-    public function show(Posyandu $posyandu)
+    public function show($id)
     {
-        //
+        $posyandu = Posyandu::find($id);
+        return $posyandu->load('user');
     }
 
     /**
@@ -78,8 +91,15 @@ class PosyanduController extends Controller
      * @param  \App\Models\Posyandu  $posyandu
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Posyandu $posyandu)
+    public function destroy($id)
     {
-        //
+        $posyandu = Posyandu::find($id);
+        $status = $posyandu->delete();
+        if($status) {
+            return [
+                'status' => 'successfully deleted',
+                'data' => $posyandu
+            ];
+        }
     }
 }
