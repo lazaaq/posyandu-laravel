@@ -24,4 +24,9 @@ class Children extends Model
         'alamat_rw',
         'active'
     ];
+    protected $hidden = [
+        'id',
+        'created_at',
+        'updated_at'
+    ];
 }

@@ -9,8 +9,14 @@ class Folder extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'posyandu_id',
         'nama',
         'tanggal'
+    ];
+    protected $hidden = [
+        'id',
+        'created_at',
+        'updated_at',
     ];
     public function posyandu() {
         return $this->belongsTo(Posyandu::class);

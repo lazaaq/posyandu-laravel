@@ -9,10 +9,16 @@ class Posyandu extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'user_id',
         'nama',
         'alamat_padukuhan'
     ];
-    public function posyandu() {
+    protected $hidden = [
+        'id',
+        'created_at',
+        'updated_at',
+    ];
+    public function user() {
         return $this->belongsTo(User::class);
     }
 }
