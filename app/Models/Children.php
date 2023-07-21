@@ -29,4 +29,7 @@ class Children extends Model
         'created_at',
         'updated_at'
     ];
+    public function data() {
+        return $this->hasMany(DataCollection::class);
+    }
 }
