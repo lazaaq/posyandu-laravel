@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 class  PosyanduController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,8 +19,12 @@ class  PosyanduController extends Controller
      */
     public function index()
     {
-        $posyandus = Posyandu::all();
-        return $posyandus;
+        try {
+            $posyandus = Posyandu::all();
+            return responseAPI(200, 'Success', $posyandus);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
+        }
     }
 
     /**
@@ -37,17 +45,22 @@ class  PosyanduController extends Controller
      */
     public function store(Request $request)
     {
-        $newUser = User::create([
-            'username' => $request->username,
-            'password' => $request->password,
-            'role' => 'posyandu'
-        ]);
-        $newPosyandu = Posyandu::create([
-            'user_id' => $newUser->id,
-            'nama' => $request->nama,
-            'alamat_padukuhan' => $request->alamat_padukuhan
-        ]);
-        return $newPosyandu->load('user');
+        try {
+            $newUser = User::create([
+                'username' => $request->username,
+                'password' => $request->password,
+                'role' => 'posyandu'
+            ]);
+            $newPosyandu = Posyandu::create([
+                'user_id' => $newUser->id,
+                'nama' => $request->nama,
+                'alamat_padukuhan' => $request->alamat_padukuhan
+            ]);
+            $data = $newPosyandu->load('user');
+            return responseAPI(200, 'Success', $data);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
+        }
     }
 
     /**
@@ -58,8 +71,12 @@ class  PosyanduController extends Controller
      */
     public function show($id)
     {
-        $posyandu = Posyandu::find($id);
-        return $posyandu->load('user');
+        try {
+            $posyandu = Posyandu::with('user', 'folders')->find($id);
+            return responseAPI(200, 'Success', $posyandu);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
+        }
     }
 
     /**
@@ -93,13 +110,19 @@ class  PosyanduController extends Controller
      */
     public function destroy($id)
     {
-        $posyandu = Posyandu::find($id);
-        $status = $posyandu->delete();
-        if($status) {
-            return [
-                'status' => 'successfully deleted',
-                'data' => $posyandu
-            ];
+        try {
+            $posyandu = Posyandu::find($id);
+            if(!$posyandu) {
+                return responseAPI(500, 'Failed', null);
+            }
+            $posyandu->delete();
+            return responseAPI(200, 'Success', $posyandu);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
         }
+    }
+
+    public function reset_password(Request $request) {
+        
     }
 }

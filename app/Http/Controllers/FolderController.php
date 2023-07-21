@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class FolderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,8 +18,12 @@ class FolderController extends Controller
      */
     public function index()
     {
-        $folders = Folder::all();
-        return $folders;
+        try {
+            $folders = Folder::all();
+            return responseAPI(200, 'Success', $folders);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
+        }
     }
 
     /**
@@ -47,8 +55,12 @@ class FolderController extends Controller
      */
     public function show($id)
     {
-        $folder = Folder::with('posyandu')->find($id);
-        return $folder;
+        try {
+            $folder = Folder::with('posyandu')->find($id);
+            return responseAPI(200, 'Success', $folder);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
+        }
     }
 
     /**

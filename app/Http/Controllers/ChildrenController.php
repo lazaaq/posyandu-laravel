@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class ChildrenController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -44,9 +48,14 @@ class ChildrenController extends Controller
      * @param  \App\Models\Children  $children
      * @return \Illuminate\Http\Response
      */
-    public function show(Children $children)
+    public function show($id)
     {
-        //
+        try {
+            $children = Children::with('data')->find($id);
+            return responseAPI(200, 'Success', $children);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
+        }
     }
 
     /**

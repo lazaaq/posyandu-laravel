@@ -23,13 +23,21 @@ class AuthController extends Controller
      */
     public function login()
     {
-        $credentials = request(['username', 'password']);
-
-        if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        try {
+            $credentials = request(['username', 'password']);
+            
+            if (! $token = auth()->attempt($credentials)) {
+                return responseAPI(401, 'Unauthorized, wrong username or password', $credentials);
+            }
+            $data = [
+                'token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60
+            ];
+            return responseAPI(200, 'Success', $data);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
         }
-
-        return $this->respondWithToken($token);
     }
 
     /**
@@ -39,7 +47,12 @@ class AuthController extends Controller
      */
     public function checkUser()
     {
-        return response()->json(auth()->user());
+        try {
+            $data = auth()->user();
+            return responseAPI(200, 'Success', $data);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
+        }
     }
 
     /**
@@ -50,16 +63,6 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-
-        return response()->json(['message' => 'Successfully logged out']);
-    }
-
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
-        ]);
+        return responseAPI(200, 'Success', null);
     }
 }
