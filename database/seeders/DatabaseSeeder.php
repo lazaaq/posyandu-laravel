@@ -46,12 +46,12 @@ class DatabaseSeeder extends Seeder
         ]);
         $posyandu = Posyandu::create([
             'user_id' => $userPosyandu->id,
-            'nama' => 'User Kelurahan',
+            'nama' => 'User Posyandu',
             'alamat_padukuhan' => 'padukuhan 1'
         ]);
         $puskesmas = Puskesmas::create([
             'user_id' => $userPuskesmas->id,
-            'nama' => 'User Kelurahan',
+            'nama' => 'User Puskesmas',
         ]);
         $folder = Folder::create([
             'posyandu_id' => $posyandu->id,

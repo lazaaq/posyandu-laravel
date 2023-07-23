@@ -46,13 +46,13 @@ class User extends Authenticatable implements JWTSubject
         'deleted_at'
     ];
     
-    public function kelurahans() {
-        return $this->hasMany(Kelurahan::class);
+    public function kelurahan() {
+        return $this->hasOne(Kelurahan::class);
     }
-    public function posyandus() {
-        return $this->hasMany(Posyandu::class);
+    public function posyandu() {
+        return $this->hasOne(Posyandu::class);
     }
-    public function puskesmas() {
-        return $this->hasMany(Puskesmas::class);
+    public function puskesma() {
+        return $this->hasOne(Puskesmas::class);
     }
 }

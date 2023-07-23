@@ -21,8 +21,8 @@ class DataCollection extends Model
         'created_at',
         'updated_at',
     ];
-    public function posyandu() {
-        return $this->belongsTo(Posyandu::class);
+    public function folder() {
+        return $this->belongsTo(Folder::class);
     }
     public function children() {
         return $this->belongsTo(Children::class);
