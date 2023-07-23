@@ -12,11 +12,7 @@ class Puskesmas extends Model
         'user_id',
         'nama',
     ];
-    protected $hidden = [
-        'id',
-        'created_at',
-        'updated_at',
-    ];
+    protected $hidden = [];
     public function puskesmas() {
         return $this->belongsTo(User::class);
     }

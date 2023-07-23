@@ -16,11 +16,7 @@ class DataCollection extends Model
         'lika',
         'lile',
     ];
-    protected $hidden = [
-        'id',
-        'created_at',
-        'updated_at',
-    ];
+    protected $hidden = [];
     public function folder() {
         return $this->belongsTo(Folder::class);
     }

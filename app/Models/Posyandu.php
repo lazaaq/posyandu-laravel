@@ -13,11 +13,7 @@ class Posyandu extends Model
         'nama',
         'alamat_padukuhan'
     ];
-    protected $hidden = [
-        'id',
-        'created_at',
-        'updated_at',
-    ];
+    protected $hidden = [];
     public function user() {
         return $this->belongsTo(User::class);
     }

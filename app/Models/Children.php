@@ -24,11 +24,7 @@ class Children extends Model
         'alamat_rw',
         'active'
     ];
-    protected $hidden = [
-        'id',
-        'created_at',
-        'updated_at'
-    ];
+    protected $hidden = [];
     public function data() {
         return $this->hasMany(DataCollection::class);
     }

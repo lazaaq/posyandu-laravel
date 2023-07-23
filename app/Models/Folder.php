@@ -13,11 +13,7 @@ class Folder extends Model
         'nama',
         'tanggal'
     ];
-    protected $hidden = [
-        'id',
-        'created_at',
-        'updated_at',
-    ];
+    protected $hidden = [];
     public function posyandu() {
         return $this->belongsTo(Posyandu::class);
     }
