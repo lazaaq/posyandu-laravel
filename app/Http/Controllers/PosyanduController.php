@@ -48,7 +48,7 @@ class  PosyanduController extends Controller
         try {
             $newUser = User::create([
                 'username' => $request->username,
-                'password' => $request->password,
+                'password' => bcrypt($request->password),
                 'role' => 'posyandu'
             ]);
             $newPosyandu = Posyandu::create([

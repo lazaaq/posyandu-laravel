@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Children;
 use App\Models\DataCollection;
 use App\Models\Folder;
 use Illuminate\Http\Request;
@@ -69,7 +70,19 @@ class DataCollectionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $data = DataCollection::create([
+                'folder_id' => $request->folder_id,
+                'children_id' => $request->children_id,
+                'bb' => $request->bb,
+                'tb' => $request->tb,
+                'lika' => $request->lika,
+                'lile' => $request->lile,
+            ]);
+            return responseAPI(200, 'Success', $data);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
+        }
     }
 
     /**
@@ -112,8 +125,28 @@ class DataCollectionController extends Controller
      * @param  \App\Models\DataCollection  $dataCollection
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DataCollection $dataCollection)
+    public function destroy($data_id)
     {
-        //
+        try {
+            $data = DataCollection::find($data_id);
+            $data->delete();
+            return responseAPI(200, 'Success', $data);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
+        }
+    }
+
+    public function history($children_id) {
+        try {
+            $children = Children::find($children_id);
+            $dataCollection = DataCollection::with('folder')->where('children_id', $children_id)->get();
+            $data = [
+                'children' => $children,
+                'data_collection' => $dataCollection
+            ];
+            return responseAPI(200, 'Success', $data);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
+        }
     }
 }
