@@ -29,11 +29,14 @@ class AuthController extends Controller
             if (! $token = auth()->attempt($credentials)) {
                 return responseAPI(401, 'Unauthorized, wrong username or password', $credentials);
             }
+            $user = getUser();
             $data = [
                 'token' => $token,
                 'token_type' => 'bearer',
-                'expires_in' => auth()->factory()->getTTL() * 60
+                'expires_in' => auth()->factory()->getTTL() * 60,
+                'user' => $user,
             ];
+
             return responseAPI(200, 'Success', $data);
         } catch(\Exception $e) {
             return responseAPI(500, 'Failed', $e);
@@ -48,7 +51,7 @@ class AuthController extends Controller
     public function checkUser()
     {
         try {
-            $data = auth()->user();
+            $data = getUser();
             return responseAPI(200, 'Success', $data);
         } catch(\Exception $e) {
             return responseAPI(500, 'Failed', $e);
