@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Posyandu;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class  PosyanduController extends Controller
 {
@@ -123,6 +124,23 @@ class  PosyanduController extends Controller
     }
 
     public function reset_password(Request $request) {
-        
+        try {
+            $posyandu_id = $request->posyandu_id;
+            $passwordBaru = $request->password_baru;
+            $passwordConfirmation = $request->password_confirmation;
+            if($passwordBaru == $passwordConfirmation) {
+                $posyandu = Posyandu::find($posyandu_id);
+                $user = User::find($posyandu->user_id);
+                $user->update([
+                    'password' => bcrypt($passwordBaru),
+                ]);
+                $user->load('posyandu');
+                return responseAPI(200, 'Success', $user);
+            } else {
+                return responseAPI(400, 'Failed, password is not match', $request);
+            }
+        } catch(\Exception $e) {
+
+        }
     }
 }
