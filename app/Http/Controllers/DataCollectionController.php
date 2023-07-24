@@ -15,7 +15,7 @@ class DataCollectionController extends Controller
     }
     public function based_folder($folder_id) {
         try {
-            $dataCollection = DataCollection::where('folder_id', $folder_id)->get();
+            $dataCollection = DataCollection::with('children')->where('folder_id', $folder_id)->get();
             return responseAPI(200, 'Success', $dataCollection);
         } catch(\Exception $e) {
             return responseAPI(500, 'Failed', $e);

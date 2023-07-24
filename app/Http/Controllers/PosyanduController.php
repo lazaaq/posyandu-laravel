@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Children;
+use App\Models\DataCollection;
+use App\Models\Folder;
 use App\Models\Posyandu;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -21,7 +24,7 @@ class  PosyanduController extends Controller
     public function index()
     {
         try {
-            $posyandus = Posyandu::all();
+            $posyandus = Posyandu::with('folders')->get();
             return responseAPI(200, 'Success', $posyandus);
         } catch(\Exception $e) {
             return responseAPI(500, 'Failed', $e);
@@ -73,7 +76,7 @@ class  PosyanduController extends Controller
     public function show($id)
     {
         try {
-            $posyandu = Posyandu::with('user', 'folders')->find($id);
+            $posyandu = Posyandu::with('user', 'folders.dataCollections')->find($id);
             return responseAPI(200, 'Success', $posyandu);
         } catch(\Exception $e) {
             return responseAPI(500, 'Failed', $e);
@@ -141,6 +144,38 @@ class  PosyanduController extends Controller
             }
         } catch(\Exception $e) {
 
+        }
+    }
+
+    public function settings($posyandu_id) {
+        try {
+            $posyandu = Posyandu::with('user')->find($posyandu_id);
+            $folders = Folder::where('posyandu_id', $posyandu_id)->get(); // untuk mendapatkan folder dengan posyandu_id yang sesuai
+            $dataCollectionsArray = array(); // untuk menampung data collections yang memiliki folder_id sesuai
+            $foldersID = array();
+            foreach($folders as $folder) {
+                $dataCollections = DataCollection::where('folder_id', $folder->id)->get();
+                foreach($dataCollections as $dataCollection) {
+                    array_push($dataCollectionsArray, $dataCollection);
+                }
+                array_push($foldersID, $folder->id);
+            }
+            $childrenID = array(); // untuk menampung child id, fungsinya untuk masuk ke array unique
+            foreach($dataCollectionsArray as $dataCollection) {
+                array_push($childrenID, $dataCollection->children_id);
+            }
+            $childrenIDUnique = array_unique($childrenID); // fungsinya untuk simplier array children id yang banyak duplicate data
+            $childrenCount = count($childrenIDUnique);
+            $data = [
+                'nama' => $posyandu->nama,
+                'padukuhan' => $posyandu->alamat_padukuhan,
+                'folder' => count($folders),
+                'anak_terdaftar' => $childrenCount,
+                'username' => $posyandu->user->username
+            ];
+            return responseAPI(200, 'Success', $data);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
         }
     }
 }

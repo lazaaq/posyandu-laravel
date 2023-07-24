@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Children;
+use App\Models\DataCollection;
+use App\Models\Folder;
+use App\Models\Posyandu;
 use Illuminate\Http\Request;
 
 class ChildrenController extends Controller
@@ -140,6 +143,40 @@ class ChildrenController extends Controller
             }
         } catch(\Exception $e) {
             return responseAPI(500, 'Failed', null);
+        }
+    }
+
+    public function based_posyandu($posyandu_id) {
+        try {
+            $folders = Folder::where('posyandu_id', $posyandu_id)->get(); // untuk mendapatkan folder dengan posyandu_id yang sesuai
+            $dataCollectionsArray = array(); // untuk menampung data collections yang memiliki folder_id sesuai
+            $foldersID = array();
+            foreach($folders as $folder) {
+                $dataCollections = DataCollection::where('folder_id', $folder->id)->get();
+                foreach($dataCollections as $dataCollection) {
+                    array_push($dataCollectionsArray, $dataCollection);
+                }
+                array_push($foldersID, $folder->id);
+            }
+            $childrenID = array(); // untuk menampung child id, fungsinya untuk masuk ke array unique
+            foreach($dataCollectionsArray as $dataCollection) {
+                array_push($childrenID, $dataCollection->children_id);
+            }
+            $childrenIDUnique = array_unique($childrenID); // fungsinya untuk simplier array children id yang banyak duplicate data
+            $children = array(); // untuk nanti menjadi data dari response
+            foreach($childrenIDUnique as $childID) {
+                $child = Children::find($childID);
+                $dataCollectionLatest = DataCollection::where('children_id', $child->id)->whereIn('folder_id', $foldersID)->latest()->first();
+                $childDataNeeded = [
+                    'children_id' => $child->id, 
+                    'nama' => $child->nama,
+                    'data_collection_latest' => $dataCollectionLatest
+                ];
+                array_push($children, $childDataNeeded);
+            }
+            return responseAPI(200, 'Success', $children);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e->getMessage());
         }
     }
 }

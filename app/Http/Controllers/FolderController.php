@@ -114,7 +114,7 @@ class FolderController extends Controller
     public function based_posyandu($posyandu_id) {
         try {
             $posyandu = Posyandu::find($posyandu_id);
-            $folders = Folder::where('posyandu_id', $posyandu_id)->get();
+            $folders = Folder::with('dataCollections')->where('posyandu_id', $posyandu_id)->get();
             $data = [
                 'posyandu' => $posyandu,
                 'folders' => $folders
@@ -137,6 +137,8 @@ class FolderController extends Controller
                 array_push($listChildrenId, $data->children_id);
             }
             foreach($children as $child) {
+                $latestDataCollection = DataCollection::where('children_id', $child->id)->latest()->first();
+                $child['latest_data'] = $latestDataCollection;
                 if(in_array($child->id, $listChildrenId)) {
                     array_push($childrenSudahTerdata, $child);
                 } else {
