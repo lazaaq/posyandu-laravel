@@ -42,7 +42,8 @@ class DatabaseSeeder extends Seeder
         ]);
         $kelurahan = Kelurahan::create([
             'user_id' => $userKelurahan->id,
-            'nama' => 'User Kelurahan',
+            'nama' => 'Kelurahan Sendangsari',
+            'alamat' => 'Pengasih, Kulon Progo',
         ]);
         $posyandu = Posyandu::create([
             'user_id' => $userPosyandu->id,
