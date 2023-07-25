@@ -81,7 +81,10 @@ class DatabaseSeeder extends Seeder
             'bb' => 4,
             'tb' => 35.5,
             'lika' => 10,
-            'lile' => 6
+            'lila' => 6,
+            'asi_eks' => 1,
+            'pmba' => 0,
+            'vit_a' => 0
         ]);
     }
 }

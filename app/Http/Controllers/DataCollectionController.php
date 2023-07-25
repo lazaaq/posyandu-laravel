@@ -77,7 +77,10 @@ class DataCollectionController extends Controller
                 'bb' => $request->bb,
                 'tb' => $request->tb,
                 'lika' => $request->lika,
-                'lile' => $request->lile,
+                'lila' => $request->lila,
+                'asi_eks' => $request->asi_eks,
+                'pmba' => $request->pmba,
+                'vit_a' => $request->vit_a,
             ]);
             return responseAPI(200, 'Success', $data);
         } catch(\Exception $e) {
@@ -139,7 +142,7 @@ class DataCollectionController extends Controller
     public function history($children_id) {
         try {
             $children = Children::find($children_id);
-            $dataCollection = DataCollection::with('folder')->where('children_id', $children_id)->get();
+            $dataCollection = DataCollection::with('folder')->where('children_id', $children_id)->orderBy('created_at', 'desc')->take(3)->get();
             $data = [
                 'children' => $children,
                 'data_collection' => $dataCollection

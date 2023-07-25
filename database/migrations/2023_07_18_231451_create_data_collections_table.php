@@ -20,7 +20,10 @@ return new class extends Migration
             $table->float('bb');
             $table->float('tb');
             $table->float('lika');
-            $table->float('lile');
+            $table->float('lila');
+            $table->boolean('asi_eks');
+            $table->boolean('pmba');
+            $table->boolean('vit_a');
             $table->timestamps();
         });
     }

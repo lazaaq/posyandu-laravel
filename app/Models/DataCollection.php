@@ -14,7 +14,10 @@ class DataCollection extends Model
         'bb',
         'tb',
         'lika',
-        'lile',
+        'lila',
+        'asi_eks',
+        'pmba',
+        'vit_a'
     ];
     protected $hidden = [];
     public function folder() {
