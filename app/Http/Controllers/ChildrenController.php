@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Children;
 use App\Models\DataCollection;
 use App\Models\Folder;
-use App\Models\Posyandu;
+use DateTime;
 use Illuminate\Http\Request;
 
 class ChildrenController extends Controller
@@ -75,6 +75,10 @@ class ChildrenController extends Controller
     {
         try {
             $children = Children::with('data')->find($id);
+            $tglLahir = new DateTime($children->tgl_lahir);
+            $tglHariIni = new DateTime();
+            $umur = $tglLahir->diff($tglHariIni);
+            $children['umur'] = $umur->format('%y tahun, %m bulan, %d hari');
             return responseAPI(200, 'Success', $children);
         } catch(\Exception $e) {
             return responseAPI(500, 'Failed', $e);
