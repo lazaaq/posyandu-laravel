@@ -6,6 +6,7 @@ use App\Models\Children;
 use App\Models\DataCollection;
 use App\Models\Folder;
 use App\Models\Posyandu;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class FolderController extends Controller
@@ -48,6 +49,18 @@ class FolderController extends Controller
     public function store(Request $request)
     {
         try {
+            // check date (if folder in that month is exist, abort)
+            $now = Carbon::now();
+            $month = $now->month;
+            $year = $now->year;
+            $latestData = Folder::latest()->first();
+            $latestDataDate = Carbon::parse($latestData->created_at);
+            $latestDataMonth = $latestDataDate->month;
+            $latestDataYear = $latestDataDate->year;
+            if($year == $latestDataYear && $month == $latestDataMonth) {
+                return responseAPI(400, 'Failed, the folder in that month is already exist', null);
+            } 
+            // create folder
             $user = getUser();
             $folder = Folder::create([
                 'posyandu_id' => $user->posyandu->id,
