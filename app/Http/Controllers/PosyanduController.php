@@ -77,7 +77,20 @@ class  PosyanduController extends Controller
     {
         try {
             $posyandu = Posyandu::with('user', 'folders.dataCollections')->find($id);
-            return responseAPI(200, 'Success', $posyandu);
+            $folders = $posyandu['folders'];
+            $folders = $folders->sortByDesc('created_at');
+            $folders = $folders->take(3);
+            $data = [
+                'id' => $posyandu->id,
+                'user_id' => $posyandu->user_id,
+                'nama' => $posyandu->nama,
+                'alamat_padukuhan' => $posyandu->alamat_padukuhan,
+                'created_at' => $posyandu->created_at,
+                'updated_at' => $posyandu->updated_at,
+                'user' => $posyandu->user,
+                'folders' => $folders
+            ];
+            return responseAPI(200, 'Success', $data);
         } catch(\Exception $e) {
             return responseAPI(500, 'Failed', $e);
         }
