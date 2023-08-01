@@ -74,7 +74,7 @@ class ChildrenController extends Controller
     public function show($id)
     {
         try {
-            $children = Children::with('data')->find($id);
+            $children = Children::with('data.folder')->find($id);
             $tglLahir = new DateTime($children->tgl_lahir);
             $tglHariIni = new DateTime();
             $umur = $tglLahir->diff($tglHariIni);
@@ -183,4 +183,38 @@ class ChildrenController extends Controller
             return responseAPI(500, 'Failed', $e->getMessage());
         }
     }
+
+    public function list_children() {
+        try {
+            $children = Children::with('data')->get();
+            $childrenTerdataArray = array();
+            $childrenBelumTerdataArray = array();
+            $nowDate = new DateTime();
+            $nowMonth = (int) $nowDate->format('m');
+            foreach($children as $child) {
+                $dataCollection = collect($child->data);
+                $dataCollectionLatest = $dataCollection->sortByDesc('created_at')->first();
+                $dataDatetime = new DateTime($dataCollectionLatest->created_at);
+                $dataMonth = (int) $dataDatetime->format('m');
+                $childDataForResponse = [
+                    'id' => $child->id,
+                    'nama' => $child->nama,
+                    'data_terakhir' => $dataDatetime->format('Y-m-d')
+                ];
+                if($nowMonth == $dataMonth) {
+                    array_push($childrenTerdataArray, $childDataForResponse);
+                } else {
+                    array_push($childrenBelumTerdataArray, $childDataForResponse);
+                }
+            }
+            $responseData = [
+                'terdata' => $childrenTerdataArray,
+                'belum_terdata' => $childrenBelumTerdataArray,
+            ];
+            return responseAPI(200, 'Success', $responseData);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e->getMessage());
+        }
+    }
+
 }

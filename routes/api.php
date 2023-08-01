@@ -39,7 +39,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'folder'], function ($router) {
     Route::get('{id}', [FolderController::class, 'show'])->middleware('role:kelurahan,posyandu');
     Route::post('store', [FolderController::class, 'store'])->middleware('role:posyandu');
     Route::get('based_posyandu/{posyandu_id}', [FolderController::class, 'based_posyandu'])->middleware('role:kelurahan,posyandu');
-    Route::get('{folder_id}/{is_terdata}', [FolderController::class, 'list_children'])->middleware('role:posyandu');
 });
 
 Route::group(['middleware' => 'api', 'prefix' => 'data'], function ($router) {
@@ -52,6 +51,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'data'], function ($router) {
 });
 
 Route::group(['middleware' => 'api', 'prefix' => 'children'], function ($router) {
+    Route::get('list', [ChildrenController::class, 'list_children'])->middleware('role:posyandu');
     Route::get('{id}', [ChildrenController::class, 'show'])->middleware('role:kelurahan,posyandu');
     Route::post('store', [ChildrenController::class, 'store'])->middleware('role:posyandu');
     Route::put('{id}', [ChildrenController::class, 'update'])->middleware('role:posyandu');
