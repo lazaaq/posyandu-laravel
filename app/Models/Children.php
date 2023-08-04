@@ -22,7 +22,8 @@ class Children extends Model
         'alamat_padukuhan',
         'alamat_rt',
         'alamat_rw',
-        'active'
+        'active',
+        'data'
     ];
     protected $hidden = [];
     public function data() {
