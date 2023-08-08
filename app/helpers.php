@@ -15,3 +15,10 @@ function getUser() {
     else if($user->role == 'puskesmas') { $user = $user->load('puskesmas'); }
     return $user;
 }
+
+function getUmur($birthDate) {
+    $tglLahir = new DateTime($birthDate);
+    $tglHariIni = new DateTime();
+    $umur = $tglLahir->diff($tglHariIni);
+    return $umur->format('%y tahun, %m bulan, %d hari');
+}
