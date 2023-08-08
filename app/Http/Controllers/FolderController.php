@@ -81,7 +81,7 @@ class FolderController extends Controller
     public function show($id)
     {
         try {
-            $folder = Folder::with('posyandu')->find($id);
+            $folder = Folder::find($id);
             return responseAPI(200, 'Success', $folder);
         } catch(\Exception $e) {
             return responseAPI(500, 'Failed', $e);
@@ -120,20 +120,6 @@ class FolderController extends Controller
     public function destroy(Folder $folder)
     {
         //
-    }
-
-    public function based_posyandu($posyandu_id) {
-        try {
-            $posyandu = Posyandu::find($posyandu_id);
-            $folders = Folder::with('dataCollections')->where('posyandu_id', $posyandu_id)->get();
-            $data = [
-                'posyandu' => $posyandu,
-                'folders' => $folders
-            ];
-            return responseAPI(200, 'Success', $data);
-        } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
-        }
     }
     
 }

@@ -44,6 +44,7 @@ class ChildrenController extends Controller
     {
         try {
             $children = Children::create([
+                'posyandu_id' => $request->posyandu_id,
                 'nama' => $request->nama,
                 'tgl_lahir' => $request->tgl_lahir,
                 'jenis_kelamin' => $request->jenis_kelamin,
@@ -74,11 +75,8 @@ class ChildrenController extends Controller
     public function show($id)
     {
         try {
-            $children = Children::with('data.folder')->find($id);
-            $tglLahir = new DateTime($children->tgl_lahir);
-            $tglHariIni = new DateTime();
-            $umur = $tglLahir->diff($tglHariIni);
-            $children['umur'] = $umur->format('%y tahun, %m bulan, %d hari');
+            $children = Children::find($id);
+            $children['umur'] = getUmur($children->tgl_lahir);
             return responseAPI(200, 'Success', $children);
         } catch(\Exception $e) {
             return responseAPI(500, 'Failed', $e);
@@ -184,9 +182,9 @@ class ChildrenController extends Controller
         }
     }
 
-    public function list_children() {
+    public function list_children($posyandu_id) { // only posyandu user could access this
         try {
-            $children = Children::with('data.folder')->get();
+            $children = Children::with('data.folder')->where('posyandu_id', $posyandu_id)->get();
             foreach($children as $child) {
                 $dataCollection = $child['data']->sortByDesc('created_at')->take(3)->toArray();
                 $child['data_collection'] = array_values($dataCollection);
@@ -195,6 +193,19 @@ class ChildrenController extends Controller
             return responseAPI(200, 'Success', $children);
         } catch(\Exception $e) {
             return responseAPI(500, 'Failed', $e->getMessage());
+        }
+    }
+    
+    public function age($children_id) {
+        try {
+            $children = Children::find($children_id);
+            $umur = getUmur($children->tgl_lahir);
+            $data = [
+                'umur' => $umur
+            ];
+            return responseAPI(200, 'Success', $data);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
         }
     }
 

@@ -132,7 +132,12 @@ class DataCollectionController extends Controller
     {
         try {
             $data = DataCollection::find($data_id);
-            $data->delete();
+            if($data) {
+                $data->delete();
+                return responseAPI(200, 'Success', $data);
+            } else {
+                return responseAPI(400, "Failed, data isn't exist", $data);
+            }
             return responseAPI(200, 'Success', $data);
         } catch(\Exception $e) {
             return responseAPI(500, 'Failed', $e);
