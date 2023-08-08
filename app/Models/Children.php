@@ -9,6 +9,7 @@ class Children extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'posyandu_id',
         'nama',
         'tgl_lahir',
         'jenis_kelamin',
@@ -28,5 +29,8 @@ class Children extends Model
     protected $hidden = [];
     public function data() {
         return $this->hasMany(DataCollection::class);
+    }
+    public function posyandu() {
+        return $this->belongsTo(Posyandu::class);
     }
 }

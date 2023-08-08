@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('folders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('posyandu_id');
             $table->string('nama');
             $table->date('tanggal');
             $table->timestamps();

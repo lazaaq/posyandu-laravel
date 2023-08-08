@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('childrens', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('posyandu_id');
             $table->string('nama');
             $table->date('tgl_lahir');
             $table->enum('jenis_kelamin', ['laki-laki', 'perempuan']);

@@ -55,11 +55,11 @@ class DatabaseSeeder extends Seeder
             'nama' => 'User Puskesmas',
         ]);
         $folder = Folder::create([
-            'posyandu_id' => $posyandu->id,
             'nama' => 'Januari',
             'tanggal' => Carbon::parse('2000-01-01'),
         ]);
         $children = Children::create([
+            'posyandu_id' => $posyandu->id,
             'nama' => 'John Lark',
             'tgl_lahir' => Carbon::parse('2000-01-01'),
             'jenis_kelamin' => 'laki-laki',

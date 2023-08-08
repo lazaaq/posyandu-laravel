@@ -17,7 +17,4 @@ class Posyandu extends Model
     public function user() {
         return $this->belongsTo(User::class);
     }
-    public function folders() {
-        return $this->hasMany(Folder::class);
-    }
 }
