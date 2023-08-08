@@ -35,10 +35,9 @@ Route::group(['middleware' => 'api', 'prefix' => 'posyandu'], function ($router)
 });
 
 Route::group(['middleware' => 'api', 'prefix' => 'folder'], function ($router) {
-    Route::get('', [FolderController::class, 'index'])->middleware('role:kelurahan,posyandu');
+    Route::get('', [FolderController::class, 'index'])->middleware('role:kelurahan');
     Route::get('{id}', [FolderController::class, 'show'])->middleware('role:kelurahan,posyandu');
     Route::post('store', [FolderController::class, 'store'])->middleware('role:posyandu');
-    Route::get('based_posyandu/{posyandu_id}', [FolderController::class, 'based_posyandu'])->middleware('role:kelurahan,posyandu');
 });
 
 Route::group(['middleware' => 'api', 'prefix' => 'data'], function ($router) {
@@ -51,7 +50,8 @@ Route::group(['middleware' => 'api', 'prefix' => 'data'], function ($router) {
 });
 
 Route::group(['middleware' => 'api', 'prefix' => 'children'], function ($router) {
-    Route::get('list', [ChildrenController::class, 'list_children'])->middleware('role:posyandu');
+    Route::get('list/{posyandu_id}', [ChildrenController::class, 'list_children'])->middleware('role:posyandu');
+    Route::get('age/{children_id}', [ChildrenController::class, 'age'])->middleware('role:posyandu');
     Route::get('{id}', [ChildrenController::class, 'show'])->middleware('role:kelurahan,posyandu');
     Route::post('store', [ChildrenController::class, 'store'])->middleware('role:posyandu');
     Route::put('{id}', [ChildrenController::class, 'update'])->middleware('role:posyandu');
