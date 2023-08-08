@@ -61,6 +61,8 @@ class  PosyanduController extends Controller
                 'alamat_padukuhan' => $request->alamat_padukuhan
             ]);
             $data = $newPosyandu->load('user');
+            $data->makeHidden(['created_at', 'updated_at']);
+            $data->user->makeHidden(['created_at', 'updated_at']);
             return responseAPI(200, 'Success', $data);
         } catch(\Exception $e) {
             return responseAPI(500, 'Failed', $e);
@@ -77,7 +79,12 @@ class  PosyanduController extends Controller
     {
         try {
             $posyandu = Posyandu::find($id);
-            return responseAPI(200, 'Success', $posyandu);
+            $posyandu->setVisible(['nama', 'alamat_padukuhan']);
+            $data = [
+                'posyandu' => $posyandu,
+                'ringkasan' => null,
+            ];
+            return responseAPI(200, 'Success', $data);
         } catch(\Exception $e) {
             return responseAPI(500, 'Failed', $e);
         }
@@ -172,6 +179,19 @@ class  PosyanduController extends Controller
                 'folder' => count($folders),
                 'anak_terdaftar' => $childrenCount,
                 'username' => $posyandu->user->username
+            ];
+            return responseAPI(200, 'Success', $data);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
+        }
+    }
+
+    public function get_username($posyandu_id) {
+        try {
+            $posyandu = Posyandu::with('user')->find($posyandu_id);
+            $username = $posyandu->user->username;
+            $data = [
+                'username' => $username,
             ];
             return responseAPI(200, 'Success', $data);
         } catch(\Exception $e) {

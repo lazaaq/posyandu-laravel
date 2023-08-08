@@ -6,41 +6,13 @@ use App\Models\Children;
 use App\Models\DataCollection;
 use App\Models\Folder;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 class DataCollectionController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth:api');
-    }
-    public function based_folder($folder_id) {
-        try {
-            $dataCollection = DataCollection::with('children')->where('folder_id', $folder_id)->get();
-            return responseAPI(200, 'Success', $dataCollection);
-        } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
-        }
-    }
-    public function based_posyandu($posyandu_id) {
-        try {
-            $folders = Folder::where('posyandu_id', $posyandu_id)->get();
-            $folders_id = array();
-            foreach($folders as $folder) {
-                array_push($folders_id, $folder->id);
-            }
-            $dataCollection = DataCollection::whereIn('folder_id', $folders_id)->get();
-            return responseAPI(200, 'Success', $dataCollection);
-        } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
-        }
-    }
-    public function based_children($children_id) {
-        try {
-            $dataCollection = DataCollection::where('children_id', $children_id)->get();
-            return responseAPI(200, 'Success', $dataCollection);
-        } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
-        }
     }
     /**
      * Display a listing of the resource.
@@ -94,9 +66,17 @@ class DataCollectionController extends Controller
      * @param  \App\Models\DataCollection  $dataCollection
      * @return \Illuminate\Http\Response
      */
-    public function show(DataCollection $dataCollection)
+    public function show($id)
     {
-        //
+        try {
+            $dataCollection = DataCollection::with('children', 'folder')->find($id);
+            $dataCollection->makeHidden(['created_at', 'updated_at']);
+            $dataCollection['children']->setVisible(['nama']);
+            $dataCollection['folder']->setVisible(['nama', 'tanggal']);
+            return responseAPI(200, 'Success', $dataCollection);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
+        }
     }
 
     /**

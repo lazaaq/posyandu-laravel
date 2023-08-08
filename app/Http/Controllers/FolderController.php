@@ -20,12 +20,7 @@ class FolderController extends Controller
      */
     public function index()
     {
-        try {
-            $folders = Folder::all();
-            return responseAPI(200, 'Success', $folders);
-        } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
-        }
+        //
     }
 
     /**
@@ -81,7 +76,12 @@ class FolderController extends Controller
     public function show($id)
     {
         try {
-            $folder = Folder::find($id);
+            $folder = Folder::with('data.children')->find($id);
+            $folder->setVisible(['nama', 'tanggal', 'data']);
+            foreach($folder['data'] as $data) {
+                $data['nama_anak'] = $data['children']['nama'];
+                $data->setVisible(['id', 'nama', 'bb', 'tb', 'lika', 'nama_anak']);
+            }
             return responseAPI(200, 'Success', $folder);
         } catch(\Exception $e) {
             return responseAPI(500, 'Failed', $e);
@@ -120,6 +120,18 @@ class FolderController extends Controller
     public function destroy(Folder $folder)
     {
         //
+    }
+
+    public function all_based_posyandu($posyandu_id) {
+        try {
+            $folders = Folder::where('posyandu_id', $posyandu_id)->get();
+            foreach($folders as $folder) {
+                $folder->setVisible(['id', 'posyandu_id', 'nama', 'tanggal']);
+            }
+            return responseAPI(200, 'Success', $folders);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e);
+        }
     }
     
 }
