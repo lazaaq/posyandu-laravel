@@ -14,7 +14,10 @@ class Folder extends Model
         'tanggal'
     ];
     protected $hidden = [];
-    public function dataCollections() {
+    public function data() {
         return $this->hasMany(DataCollection::class);
+    }
+    public function posyandu() {
+        return $this->belongsTo(Posyandu::class);
     }
 }

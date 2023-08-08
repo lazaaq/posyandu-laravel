@@ -55,6 +55,7 @@ class DatabaseSeeder extends Seeder
             'nama' => 'User Puskesmas',
         ]);
         $folder = Folder::create([
+            'posyandu_id' => 1,
             'nama' => 'Januari',
             'tanggal' => Carbon::parse('2000-01-01'),
         ]);
