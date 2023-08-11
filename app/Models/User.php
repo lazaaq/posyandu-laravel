@@ -48,7 +48,7 @@ class User extends Authenticatable implements JWTSubject
     public function posyandu() {
         return $this->hasOne(Posyandu::class);
     }
-    public function puskesma() {
+    public function puskesmas() {
         return $this->hasOne(Puskesmas::class);
     }
 }
