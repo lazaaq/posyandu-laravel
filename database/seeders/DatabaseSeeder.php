@@ -53,6 +53,7 @@ class DatabaseSeeder extends Seeder
         $puskesmas = Puskesmas::create([
             'user_id' => $userPuskesmas->id,
             'nama' => 'User Puskesmas',
+            'alamat' => 'Pengasih, Kulon Progo',
         ]);
         $folder = Folder::create([
             'posyandu_id' => 1,
