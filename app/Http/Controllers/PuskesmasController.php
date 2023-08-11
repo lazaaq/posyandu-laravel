@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Posyandu;
 use App\Models\Puskesmas;
 use Illuminate\Http\Request;
 
@@ -48,9 +49,23 @@ class PuskesmasController extends Controller
      * @param  \App\Models\Puskesmas  $puskesmas
      * @return \Illuminate\Http\Response
      */
-    public function show(Puskesmas $puskesmas)
+    public function show()
     {
-        //
+        try {
+            $puskesmas = Puskesmas::find(1);
+            $posyandus = Posyandu::with('folders')->get();
+            foreach($posyandus as $posyandu) {
+                $folderTerbaru = $posyandu['folders']->sortByDesc('created_at')->first();
+                $folderTerbaru->setVisible(['nama', 'tanggal']);
+                $posyandu['folder_terbaru'] = $folderTerbaru;
+                $posyandu->setVisible(['id', 'nama', 'alamat_padukuhan', 'folder_terbaru']);
+            }
+            $puskesmas['posyandus'] = $posyandus;
+            $puskesmas->setVisible(['nama', 'alamat', 'posyandus']);
+            return responseAPI(200, 'Success', $puskesmas);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e->getMessage());
+        }
     }
 
     /**

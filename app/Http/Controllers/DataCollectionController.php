@@ -56,7 +56,7 @@ class DataCollectionController extends Controller
             ]);
             return responseAPI(200, 'Success', $data);
         } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
+            return responseAPI(500, 'Failed', $e->getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ class DataCollectionController extends Controller
             $dataCollection['folder']->setVisible(['nama', 'tanggal']);
             return responseAPI(200, 'Success', $dataCollection);
         } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
+            return responseAPI(500, 'Failed', $e->getMessage());
         }
     }
 
@@ -120,21 +120,30 @@ class DataCollectionController extends Controller
             }
             return responseAPI(200, 'Success', $data);
         } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
+            return responseAPI(500, 'Failed', $e->getMessage());
         }
     }
 
     public function history($children_id) {
         try {
-            $children = Children::find($children_id);
+            $child= Children::with('posyandu')->find($children_id);
             $dataCollection = DataCollection::with('folder')->where('children_id', $children_id)->orderBy('created_at', 'desc')->take(3)->get();
+            $child['kategori'] = getKategori($child['jenis_kelamin'], $dataCollection[0]['bb'], $child['tgl_lahir']);
+            
+            // merapihkan response
+            $child['posyandu']->setVisible(['nama']);
+            $child->setVisible(['nama', 'kategori', 'posyandu']);
+            foreach($dataCollection as $data) {
+                $data['folder']->setVisible(['nama', 'tanggal']);
+            }
+            $dataCollection->setVisible(['id', 'bb', 'tb', 'lika', 'folder']);
             $data = [
-                'children' => $children,
+                'children' => $child,
                 'data_collection' => $dataCollection
             ];
             return responseAPI(200, 'Success', $data);
         } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
+            return responseAPI(500, 'Failed', $e->getMessage());
         }
     }
 }

@@ -39,7 +39,7 @@ class AuthController extends Controller
 
             return responseAPI(200, 'Success', $data);
         } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
+            return responseAPI(500, 'Failed', $e->getMessage());
         }
     }
 
@@ -54,7 +54,7 @@ class AuthController extends Controller
             $data = getUser();
             return responseAPI(200, 'Success', $data);
         } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
+            return responseAPI(500, 'Failed', $e->getMessage());
         }
     }
 

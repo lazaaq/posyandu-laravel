@@ -63,7 +63,7 @@ class FolderController extends Controller
             $folder->load('posyandu');
             return responseAPI(200, 'Success', $folder);
         } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
+            return responseAPI(500, 'Failed', $e->getMessage());
         }
     }
 
@@ -84,7 +84,7 @@ class FolderController extends Controller
             }
             return responseAPI(200, 'Success', $folder);
         } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
+            return responseAPI(500, 'Failed', $e->getMessage());
         }
     }
 
@@ -126,11 +126,11 @@ class FolderController extends Controller
         try {
             $folders = Folder::where('posyandu_id', $posyandu_id)->get();
             foreach($folders as $folder) {
-                $folder->setVisible(['id', 'posyandu_id', 'nama', 'tanggal']);
+                $folder->setVisible(['id', 'nama', 'tanggal']);
             }
             return responseAPI(200, 'Success', $folders);
         } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
+            return responseAPI(500, 'Failed', $e->getMessage());
         }
     }
     

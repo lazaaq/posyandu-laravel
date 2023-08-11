@@ -62,7 +62,7 @@ class ChildrenController extends Controller
             ]);
             return responseAPI(200, 'Success', $children);
         } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
+            return responseAPI(500, 'Failed', $e->getMessage());
         }
     }
 
@@ -75,11 +75,14 @@ class ChildrenController extends Controller
     public function show($id)
     {
         try {
-            $children = Children::find($id);
+            $children = Children::with('data')->find($id);
+            $children['data_latest'] = $children['data']->sortByDesc('created_at')->first();
+            $children['kategori'] = getKategori($children['jenis_kelamin'], $children['data_latest']['bb'], $children['tgl_lahir']);
             $children['umur'] = getUmur($children->tgl_lahir);
+            $children->makeHidden(['data', 'data_latest']);
             return responseAPI(200, 'Success', $children);
         } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
+            return responseAPI(500, 'Failed', $e->getMessage());
         }
     }
 
@@ -123,7 +126,7 @@ class ChildrenController extends Controller
             ]);
             return responseAPI(200, 'Success', $children);
         } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
+            return responseAPI(500, 'Failed', $e->getMessage());
         }
     }
 
@@ -185,10 +188,18 @@ class ChildrenController extends Controller
     public function list_children($posyandu_id) { // only posyandu user could access this
         try {
             $children = Children::with('data.folder')->where('posyandu_id', $posyandu_id)->get();
+            $children = filterChildrenBelow5Years($children);
+            // return count($children[0]['data']);
             foreach($children as $child) {
-                $dataCollection = $child['data']->sortByDesc('created_at')->take(3)->toArray();
-                $child['data_collection'] = array_values($dataCollection);
-                $child->makeHidden('data')->toArray();
+                if(count($child['data']) == 0) {
+                    $child['folder_terbaru'] = [];
+                    $child->setVisible(['id', 'nama', 'folder_terbaru']);
+                } else {
+                    $folderTerbaru = $child['data']->sortByDesc('created_at')->first()->folder;
+                    $folderTerbaru->setVisible(['nama', 'tanggal']);
+                    $child['folder_terbaru'] = $folderTerbaru;
+                    $child->setVisible(['id', 'nama', 'folder_terbaru']);
+                }
             }
             return responseAPI(200, 'Success', $children);
         } catch(\Exception $e) {
@@ -205,7 +216,7 @@ class ChildrenController extends Controller
             ];
             return responseAPI(200, 'Success', $data);
         } catch(\Exception $e) {
-            return responseAPI(500, 'Failed', $e);
+            return responseAPI(500, 'Failed', $e->getMessage());
         }
     }
 
