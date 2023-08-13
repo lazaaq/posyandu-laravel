@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Children;
 use App\Models\DataCollection;
 use App\Models\Folder;
-use DateTime;
 use Illuminate\Http\Request;
 
 class ChildrenController extends Controller
@@ -189,7 +188,6 @@ class ChildrenController extends Controller
         try {
             $children = Children::with('data.folder')->where('posyandu_id', $posyandu_id)->get();
             $children = filterChildrenBelow5Years($children);
-            // return count($children[0]['data']);
             foreach($children as $child) {
                 if(count($child['data']) == 0) {
                     $child['folder_terbaru'] = [];
@@ -215,6 +213,36 @@ class ChildrenController extends Controller
                 'umur' => $umur
             ];
             return responseAPI(200, 'Success', $data);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e->getMessage());
+        }
+    }
+
+    public function export_data($folder_id) {
+        try {
+            $dataCollections = DataCollection::with('children')->where('folder_id', $folder_id)->get();
+            $no = 1;
+            foreach($dataCollections as $data) {
+                $child = $data['children'];
+                $data['no'] = $no++;
+                $data['tanggal_lahir'] = $child['tgl_lahir'];
+                $data['jk'] = strcmp($child['jenis_kelamin'], 'laki-laki') ? 'L' : 'P';
+                $data['nomor_kk'] = $child['kk'];
+                $data['nik'] = $child['nik'];
+                $data['nama_anak'] = $child['nama'];
+                $data['berat_lahir'] = $child['bb_lahir'];
+                $data['tinggi_lahir'] = $child['tb_lahir'];
+                $data['kia'] = $child['kia'];
+                $data['imd'] = $child['imd'];
+                $data['nama_ortu'] = $child['ibu_nama'];
+                $data['nik_ortu'] = $child['ibu_nik'];
+                $data['hp_ortu'] = $child['ibu_hp'];
+                $data['alamat'] = $child['alamat_padukuhan'];
+                $data['rt'] = $child['alamat_rt'];
+                $data['rw'] = $child['alamat_rw'];
+                $data->setVisible(['no', 'tanggal_lahir', 'jk', 'nomor_kk', 'nik', 'nama_anak', 'berat_lahir', 'tinggi_lahir', 'kia', 'imd', 'nama_ortu', 'nik_ortu', 'hp_ortu', 'alamat', 'rt', 'rw', 'bb', 'tb', 'lika', 'lila', 'asi_eks', 'vit_a', 'pmba']);
+            }
+            return responseAPI(200, 'Success', $dataCollections);
         } catch(\Exception $e) {
             return responseAPI(500, 'Failed', $e->getMessage());
         }

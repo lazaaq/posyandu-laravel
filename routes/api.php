@@ -58,6 +58,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'children'], function ($router)
     Route::put('{id}', [ChildrenController::class, 'update'])->middleware('role:posyandu');
     // Route::delete('{id}', [ChildrenController::class, 'destroy'])->middleware('role:posyandu');
     // Route::get('based_posyandu/{posyandu_id}', [ChildrenController::class, 'based_posyandu'])->middleware('role:kelurahan');
+    Route::get('export_data/{folder_id}', [ChildrenController::class, 'export_data'])->middleware('role:kelurahan,puskesmas');
 });
 
 Route::group(['middleware' => 'api', 'prefix' => 'kelurahan'], function ($router) {
