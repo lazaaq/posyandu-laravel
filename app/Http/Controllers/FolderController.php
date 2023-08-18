@@ -47,12 +47,15 @@ class FolderController extends Controller
             $month = $now->month;
             $year = $now->year;
             $latestData = Folder::latest()->first();
-            $latestDataDate = Carbon::parse($latestData->created_at);
-            $latestDataMonth = $latestDataDate->month;
-            $latestDataYear = $latestDataDate->year;
-            if($year == $latestDataYear && $month == $latestDataMonth) {
-                return responseAPI(400, 'Failed, the folder in that month is already exist', null);
-            } 
+            if($latestData != null) {
+                $latestDataDate = Carbon::parse($latestData->tanggal);
+                $latestDataMonth = $latestDataDate->month;
+                $latestDataYear = $latestDataDate->year;
+                if(($year < $latestDataYear) || ($year == $latestDataYear && $month <= $latestDataMonth)) {
+                    $data = [$year, $latestDataYear, $month, $latestDataMonth];
+                    return responseAPI(400, 'Failed, the folder in that month is already exist or you entered month that has passed', $data);
+                } 
+            }
             // create folder
             $user = getUser();
             $folder = Folder::create([
