@@ -74,6 +74,7 @@ class KelurahanController extends Controller
             ];
             foreach($children as $child) {
                 $dataLatest = DataCollection::where('children_id', $child['id'])->get()->sortByDesc('created_at')->first();
+                if($dataLatest == null) continue;
                 $status = getKategori($child['jenis_kelamin'], $dataLatest['bb'], $child['tgl_lahir']);
                 if($status == 'stunting') { $ringkasanKategori['jumlah_stunting'] += 1; }
                 else if($status == 'gizi buruk') { $ringkasanKategori['jumlah_gizi_buruk'] += 1; }
