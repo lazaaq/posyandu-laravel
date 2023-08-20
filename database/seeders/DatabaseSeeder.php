@@ -26,18 +26,18 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
 
         $userKelurahan = User::create([
-            'username' => 'usernameKelurahan',
-            'password' => bcrypt('password'),
+            'username' => 'kelurahan',
+            'password' => bcrypt('KelurahanSendangsari1!'),
             'role' => 'kelurahan'
         ]);
         $userPosyandu = User::create([
-            'username' => 'usernamePosyandu',
-            'password' => bcrypt('password'),
+            'username' => 'posyandu',
+            'password' => bcrypt('PosyanduSendangsari1!'),
             'role' => 'posyandu'
         ]);
         $userPuskesmas = User::create([
-            'username' => 'usernamePuskesmas',
-            'password' => bcrypt('password'),
+            'username' => 'puskesmas',
+            'password' => bcrypt('PuskesmasSendangsari1!'),
             'role' => 'puskesmas'
         ]);
         $kelurahan = Kelurahan::create([
@@ -69,6 +69,9 @@ class DatabaseSeeder extends Seeder
             'kk' => '1234567890123456',
             'bb_lahir' => 3,
             'tb_lahir' => 30,
+            'anak_ke' => 2,
+            'kia' => true,
+            'imd' => true,
             'ibu_nama' => 'Nama Ibu',
             'ibu_nik' => '1234567890123456',
             'ibu_hp' => '1234567890',

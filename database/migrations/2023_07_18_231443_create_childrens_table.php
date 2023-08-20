@@ -23,6 +23,9 @@ return new class extends Migration
             $table->string('kk');
             $table->float('bb_lahir');
             $table->float('tb_lahir');
+            $table->integer('anak_ke');
+            $table->boolean('kia');
+            $table->boolean('imd');
             $table->string('ibu_nama');
             $table->string('ibu_nik');
             $table->string('ibu_hp');

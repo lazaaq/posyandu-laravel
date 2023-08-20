@@ -51,6 +51,9 @@ class ChildrenController extends Controller
                 'kk' => $request->kk,
                 'bb_lahir' => $request->bb_lahir,
                 'tb_lahir' => $request->tb_lahir,
+                'anak_ke' => $request->anak_ke,
+                'kia' => $request->kia,
+                'imd' => $request->imd,
                 'ibu_nama' => $request->ibu_nama,
                 'ibu_nik' => $request->ibu_nik,
                 'ibu_hp' => $request->ibu_hp,
@@ -74,9 +77,17 @@ class ChildrenController extends Controller
     public function show($id)
     {
         try {
-            $children = Children::with('data')->find($id);
-            $children['data_latest'] = $children['data']->sortByDesc('created_at')->first();
-            $children['kategori'] = getKategori($children['jenis_kelamin'], $children['data_latest']['bb'], $children['tgl_lahir']);
+            $children = Children::find($id);
+            $datas = DataCollection::where('children_id', $children->id)->get();
+            if($datas->count() == 0) {
+                $children['data'] = null;
+                $children['kategori'] = null;
+            } else {
+                $children['data'] = $datas;
+                $children['data_latest'] = $children['data']->sortByDesc('created_at')->first();
+                $children['kategori'] = getKategori($children['jenis_kelamin'], $children['data_latest']['bb'], $children['tgl_lahir']);
+            }
+            
             $children['umur'] = getUmur($children->tgl_lahir);
             $children->makeHidden(['data', 'data_latest']);
             return responseAPI(200, 'Success', $children);
