@@ -190,7 +190,7 @@ class ChildrenController extends Controller
             $children = filterChildrenBelow5Years($children);
             foreach($children as $child) {
                 if(count($child['data']) == 0) {
-                    $child['folder_terbaru'] = [];
+                    $child['folder_terbaru'] = null;
                     $child->setVisible(['id', 'nama', 'folder_terbaru']);
                 } else {
                     $folderTerbaru = $child['data']->sortByDesc('created_at')->first()->folder;
