@@ -127,16 +127,23 @@ class DataCollectionController extends Controller
     public function history($children_id) {
         try {
             $child= Children::with('posyandu')->find($children_id);
+            if(!$child) {
+                return responseAPI(400, "Failed, child isn't exist", null);
+            }
             $dataCollection = DataCollection::with('folder')->where('children_id', $children_id)->orderBy('created_at', 'desc')->take(3)->get();
-            $child['kategori'] = getKategori($child['jenis_kelamin'], $dataCollection[0]['bb'], $child['tgl_lahir']);
+            if($dataCollection->count() == 0) {
+                $child['kategori'] = null;
+            } else {
+                $child['kategori'] = getKategori($child['jenis_kelamin'], $dataCollection[0]['bb'], $child['tgl_lahir']);
+            }
             
             // merapihkan response
             $child['posyandu']->setVisible(['nama']);
             $child->setVisible(['nama', 'kategori', 'posyandu']);
             foreach($dataCollection as $data) {
-                $data['folder']->setVisible(['nama', 'tanggal']);
+                $data['folder']->setVisible(['id', 'nama', 'tanggal']);
             }
-            $dataCollection->setVisible(['id', 'bb', 'tb', 'lika', 'folder']);
+            $dataCollection->makeHidden(['created_at', 'updated_at']);
             $data = [
                 'children' => $child,
                 'data_collection' => $dataCollection
