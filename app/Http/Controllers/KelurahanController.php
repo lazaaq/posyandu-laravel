@@ -60,13 +60,14 @@ class KelurahanController extends Controller
             $children = Children::all();
             $children = filterChildrenBelow5Years($children);
             $childrencount = $children->count();
+            // return 'tes';
             foreach($posyandus as $posyandu) {
                 if($posyandu['folders']->count() == 0) {
-                    $posyandu['folder_terbaru'] = [];
+                    $posyandu['folder_terbaru'] = null;
                     continue;
                 }
-                $folder = $posyandu['folders']->sortByDesc('created_at')->take(1);
-                $posyandu['folder_terbaru'] = $folder->setVisible(['nama', 'tanggal']);
+                $folder = $posyandu['folders']->sortByDesc('created_at')->take(1)[0];
+                $posyandu['folder_terbaru'] = (object) $folder->setVisible(['id', 'nama', 'tanggal']);
                 $posyandu->makeHidden('folders')->toArray();
             }
             $ringkasanKategori = [
