@@ -126,6 +126,9 @@ class ChildrenController extends Controller
                 'kk' => $request->kk,
                 'bb_lahir' => $request->bb_lahir,
                 'tb_lahir' => $request->tb_lahir,
+                'anak_ke' => $request->anak_ke,
+                'kia' => $request->kia,
+                'imd' => $request->imd,
                 'ibu_nama' => $request->ibu_nama,
                 'ibu_nik' => $request->ibu_nik,
                 'ibu_hp' => $request->ibu_hp,
@@ -243,6 +246,7 @@ class ChildrenController extends Controller
                 $data['nama_anak'] = $child['nama'];
                 $data['berat_lahir'] = $child['bb_lahir'];
                 $data['tinggi_lahir'] = $child['tb_lahir'];
+                $data['anak_ke'] = $child['anak_ke'];
                 $data['kia'] = $child['kia'];
                 $data['imd'] = $child['imd'];
                 $data['nama_ortu'] = $child['ibu_nama'];
@@ -251,7 +255,7 @@ class ChildrenController extends Controller
                 $data['alamat'] = $child['alamat_padukuhan'];
                 $data['rt'] = $child['alamat_rt'];
                 $data['rw'] = $child['alamat_rw'];
-                $data->setVisible(['no', 'tanggal_lahir', 'jk', 'nomor_kk', 'nik', 'nama_anak', 'berat_lahir', 'tinggi_lahir', 'kia', 'imd', 'nama_ortu', 'nik_ortu', 'hp_ortu', 'alamat', 'rt', 'rw', 'bb', 'tb', 'lika', 'lila', 'asi_eks', 'vit_a', 'pmba']);
+                $data->setVisible(['no', 'tanggal_lahir', 'jk', 'nomor_kk', 'nik', 'nama_anak', 'berat_lahir', 'tinggi_lahir', 'anak_ke', 'kia', 'imd', 'nama_ortu', 'nik_ortu', 'hp_ortu', 'alamat', 'rt', 'rw', 'bb', 'tb', 'lika', 'lila', 'asi_eks', 'vit_a', 'pmba']);
             }
             return responseAPI(200, 'Success', $dataCollections);
         } catch(\Exception $e) {
