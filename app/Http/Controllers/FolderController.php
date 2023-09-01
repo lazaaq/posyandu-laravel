@@ -43,18 +43,23 @@ class FolderController extends Controller
     {
         try {
             // check date (if folder in that month is exist, abort)
-            $now = Carbon::now();
-            $month = $now->month;
-            $year = $now->year;
-            $latestData = Folder::latest()->first();
-            if($latestData != null) {
-                $latestDataDate = Carbon::parse($latestData->tanggal);
-                $latestDataMonth = $latestDataDate->month;
-                $latestDataYear = $latestDataDate->year;
-                if(($year < $latestDataYear) || ($year == $latestDataYear && $month <= $latestDataMonth)) {
-                    $data = [$year, $latestDataYear, $month, $latestDataMonth];
+            $tanggal = Carbon::parse($request->tanggal);
+            $year = $tanggal->year;
+            $month = $tanggal->month;
+            $folders = Folder::where('tanggal', 'like', '%'.$year.'%')->get();
+            foreach($folders as $folder) {
+                $folderDate = Carbon::parse($folder->tanggal);
+                $folderMonth = $folderDate->month;
+                $folderYear = $folderDate->year;
+                if($year == $folderYear && $month == $folderMonth) {
+                    $data = [
+                        "year_now" => $year, 
+                        "latest_folder_year" => $folderYear, 
+                        "month_now" => $month, 
+                        "latest_folder_month" => $folderMonth
+                    ];
                     return responseAPI(400, 'Failed, the folder in that month is already exist or you entered month that has passed', $data);
-                } 
+                }
             }
             // create folder
             $user = getUser();
