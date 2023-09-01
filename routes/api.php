@@ -27,10 +27,8 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
 });
 
 Route::group(['middleware' => 'api', 'prefix' => 'posyandu'], function ($router) {
-    // Route::get('', [PosyanduController::class, 'index'])->middleware('role:kelurahan'); 
     Route::get('{id}', [PosyanduController::class, 'show'])->middleware('role:kelurahan,posyandu,puskesmas');
     Route::post('store', [PosyanduController::class, 'store'])->middleware('role:kelurahan,puskesmas');
-    // Route::delete('{id}', [PosyanduController::class, 'destroy'])->middleware('role:kelurahan');
     Route::get('get_username/{posyandu_id}', [PosyanduController::class, 'get_username'])->middleware('role:kelurahan');
     Route::post('reset_password', [PosyanduController::class, 'reset_password'])->middleware('role:kelurahan');
     Route::get('settings/{posyandu_id}', [PosyanduController::class, 'settings'])->middleware('role:kelurahan');
@@ -56,8 +54,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'children'], function ($router)
     Route::get('{id}', [ChildrenController::class, 'show'])->middleware('role:kelurahan,posyandu,puskesmas');
     Route::post('store', [ChildrenController::class, 'store'])->middleware('role:posyandu');
     Route::put('{id}', [ChildrenController::class, 'update'])->middleware('role:posyandu');
-    // Route::delete('{id}', [ChildrenController::class, 'destroy'])->middleware('role:posyandu');
-    // Route::get('based_posyandu/{posyandu_id}', [ChildrenController::class, 'based_posyandu'])->middleware('role:kelurahan');
     Route::get('export_data/{folder_id}', [ChildrenController::class, 'export_data'])->middleware('role:kelurahan,puskesmas');
 });
 

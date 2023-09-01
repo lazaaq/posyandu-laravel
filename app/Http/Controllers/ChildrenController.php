@@ -208,7 +208,7 @@ class ChildrenController extends Controller
                     $child->setVisible(['id', 'nama', 'folder_terbaru']);
                 } else {
                     $folderTerbaru = $child['data']->sortByDesc('created_at')->first()->folder;
-                    $folderTerbaru->setVisible(['nama', 'tanggal']);
+                    $folderTerbaru->setVisible(['id', 'nama', 'tanggal']);
                     $child['folder_terbaru'] = $folderTerbaru;
                     $child->setVisible(['id', 'nama', 'folder_terbaru']);
                 }

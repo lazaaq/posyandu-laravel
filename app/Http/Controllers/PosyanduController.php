@@ -155,7 +155,7 @@ class  PosyanduController extends Controller
             $posyandu_id = $request->posyandu_id;
             $passwordBaru = $request->password_baru;
             $passwordConfirmation = $request->password_confirmation;
-            if($passwordBaru == $passwordConfirmation) {
+            if(strcmp($passwordBaru, $passwordConfirmation)) {
                 $posyandu = Posyandu::find($posyandu_id);
                 $user = User::find($posyandu->user_id);
                 $user->update([

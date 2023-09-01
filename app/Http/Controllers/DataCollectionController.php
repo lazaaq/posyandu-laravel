@@ -71,7 +71,8 @@ class DataCollectionController extends Controller
         try {
             $dataCollection = DataCollection::with('children', 'folder')->find($id);
             $dataCollection->makeHidden(['created_at', 'updated_at']);
-            $dataCollection['children']->setVisible(['nama']);
+            $dataCollection['children']['kategori'] = getKategori($dataCollection['children']['jenis_kelamin'], $dataCollection['bb'], $dataCollection['children']['tgl_lahir']);
+            $dataCollection['children']->setVisible(['nama', 'kategori']);
             $dataCollection['folder']->setVisible(['nama', 'tanggal']);
             return responseAPI(200, 'Success', $dataCollection);
         } catch(\Exception $e) {
