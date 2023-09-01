@@ -56,7 +56,9 @@ class PuskesmasController extends Controller
             $posyandus = Posyandu::with('folders')->get();
             foreach($posyandus as $posyandu) {
                 $folderTerbaru = $posyandu['folders']->sortByDesc('created_at')->first();
-                $folderTerbaru->setVisible(['nama', 'tanggal']);
+                if($folderTerbaru) {
+                    $folderTerbaru->setVisible(['nama', 'tanggal']);
+                }
                 $posyandu['folder_terbaru'] = $folderTerbaru;
                 $posyandu->setVisible(['id', 'nama', 'alamat_padukuhan', 'folder_terbaru']);
             }
