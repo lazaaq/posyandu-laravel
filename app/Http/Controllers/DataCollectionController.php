@@ -98,9 +98,28 @@ class DataCollectionController extends Controller
      * @param  \App\Models\DataCollection  $dataCollection
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, DataCollection $dataCollection)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $data = DataCollection::find($id);
+            if($data) {
+                $data->update([
+                    'bb' => $request->bb,
+                    'tb' => $request->tb,
+                    'lika' => $request->lika,
+                    'lila' => $request->lila,
+                    'asi_eks' => $request->asi_eks,
+                    'pmba' => $request->pmba,
+                    'vit_a' => $request->vit_a,
+                ]);
+                return responseAPI(200, 'Success', $data);
+            } else {
+                return responseAPI(400, "Failed, data isn't exist", $data);
+            }
+            return responseAPI(200, 'Success', $data);
+        } catch(\Exception $e) {
+            return responseAPI(500, 'Failed', $e->getMessage());
+        }
     }
 
     /**

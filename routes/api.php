@@ -46,6 +46,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'data'], function ($router) {
     Route::post('store', [DataCollectionController::class, 'store'])->middleware('role:posyandu');
     Route::get('history/{children_id}', [DataCollectionController::class, 'history'])->middleware('role:kelurahan,posyandu,puskesmas');
     Route::delete('{data_id}', [DataCollectionController::class, 'destroy'])->middleware('role:posyandu');
+    Route::put('{data_id}', [DataCollectionController::class, 'update'])->middleware('role:posyandu');
 });
 
 Route::group(['middleware' => 'api', 'prefix' => 'children'], function ($router) {
