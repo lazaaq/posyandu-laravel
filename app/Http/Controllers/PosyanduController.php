@@ -78,6 +78,9 @@ class  PosyanduController extends Controller
     {
         try {
             $posyandu = Posyandu::find($id);
+            if(!$posyandu) {
+                return responseAPI(500, 'Failed', 'There is not posyandu with such id');
+            }
             $posyandu->setVisible(['id', 'nama', 'alamat_padukuhan']);
             $children = Children::where('posyandu_id', $id)->get();
             $children = filterChildrenBelow5Years($children);
