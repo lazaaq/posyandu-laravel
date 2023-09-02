@@ -233,6 +233,7 @@ class  PosyanduController extends Controller
             ];
             foreach($children as $child) {
                 $dataLatest = DataCollection::where('children_id', $child['id'])->get()->sortByDesc('created_at')->first();
+                if(!$dataLatest) { continue; } // jika tidak ada data collection, maka lanjut ke child berikutnya
                 $kategori = getKategori($child['jenis_kelamin'], $dataLatest['bb'], $child['tgl_lahir']);
                 $child->setVisible(['id', 'nama']);
                 if($kategori == 'stunting') { 
