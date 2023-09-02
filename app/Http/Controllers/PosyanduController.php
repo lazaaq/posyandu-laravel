@@ -93,6 +93,7 @@ class  PosyanduController extends Controller
             ];
             foreach($children as $child) {
                 $dataLatest = DataCollection::where('children_id', $child['id'])->get()->sortByDesc('created_at')->first();
+                if(!$dataLatest) { continue; } // jika tidak ada data collection, maka lanjut ke child berikutnya
                 $status = getKategori($child['jenis_kelamin'], $dataLatest['bb'], $child['tgl_lahir']);
                 if($status == 'stunting') { $ringkasanKategori['jumlah_stunting'] += 1; }
                 else if($status == 'gizi buruk') { $ringkasanKategori['jumlah_gizi_buruk'] += 1; }
