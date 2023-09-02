@@ -157,9 +157,9 @@ class  PosyanduController extends Controller
     public function reset_password(Request $request) {
         try {
             $posyandu_id = $request->posyandu_id;
-            $passwordBaru = $request->password_baru;
-            $passwordConfirmation = $request->password_confirmation;
-            if(strcmp($passwordBaru, $passwordConfirmation)) {
+            $passwordBaru = trim($request->password_baru);
+            $passwordConfirmation = trim($request->password_confirmation);
+            if(!strcmp($passwordBaru, $passwordConfirmation)) {
                 $posyandu = Posyandu::find($posyandu_id);
                 $user = User::find($posyandu->user_id);
                 $user->update([
