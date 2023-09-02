@@ -240,7 +240,7 @@ class ChildrenController extends Controller
                 $child = $data['children'];
                 $data['no'] = $no++;
                 $data['tanggal_lahir'] = $child['tgl_lahir'];
-                $data['jk'] = strcmp($child['jenis_kelamin'], 'laki-laki') ? 'L' : 'P';
+                $data['jk'] = strcmp($child['jenis_kelamin'], 'laki-laki') ? 'P' : 'L';
                 $data['nomor_kk'] = $child['kk'];
                 $data['nik'] = $child['nik'];
                 $data['nama_anak'] = $child['nama'];
