@@ -46,7 +46,7 @@ class FolderController extends Controller
             $tanggal = Carbon::parse($request->tanggal);
             $year = $tanggal->year;
             $month = $tanggal->month;
-            $folders = Folder::where('tanggal', 'like', '%'.$year.'%')->get();
+            $folders = Folder::where('posyandu_id', $request->posyandu_id)->where('tanggal', 'like', '%'.$year.'%')->get();
             foreach($folders as $folder) {
                 $folderDate = Carbon::parse($folder->tanggal);
                 $folderMonth = $folderDate->month;
@@ -62,9 +62,8 @@ class FolderController extends Controller
                 }
             }
             // create folder
-            $user = getUser();
             $folder = Folder::create([
-                'posyandu_id' => $user->posyandu->id,
+                'posyandu_id' => $request->posyandu_id,
                 'nama' => $request->nama,
                 'tanggal' => $request->tanggal
             ]);
